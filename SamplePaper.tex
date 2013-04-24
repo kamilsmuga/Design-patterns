@@ -174,12 +174,7 @@ The LoadableComponent is a base class that make writing Page Objects easier. It 
 Using previous example let's apply LoadableComponent for GoogleSearchPage Page Object. 
 
 \begin{verbatim}
-class GoogleSearchPage
-  def initialize
-    @driver = Webdriver.new
-    @q = WebElement.new
-    @btn = WebElement.new
-  end
+class GoogleSearchPageLoadable < GoogleSearchPage
   def \emph{load}
     @driver.get("http://google.com")
   end
@@ -188,27 +183,7 @@ class GoogleSearchPage
     assertTrue("Google page not loaded: #{url}", url.contains "google.com")  
     assertTrue @btn.isDisplayed
     assertTrue @q.isDisplayed
-  def open(url)
-    @driver.get url
   end
-  def close
-    @driver.quit
-  end
-  def getTitle
-    @driver.getTitle
-  end
-  def searchFor(searchString)
-    @self.typeSearchTerm searchString
-    @btn.click
-  end
-  def typeSearchTerm(searchTerm)
-    @q.sendKeys searchTerm
-  end
-  def clickOnSearch
-    @btn.click
-  end
-end
-
 \end{verbatim}
 
 Two methods have been added:
@@ -216,7 +191,42 @@ Two methods have been added:
 \item [--] load -- method contains information how to laod the page itself,
 \item [--] isLoaded -- method performs assertions to ensure proper page has been loaded correctly.
 \end{itemize}
+Using this approach we encapsulated information how to load page object page and ensure its correctness. \
+LoadableComponent has more advantages while using with another LoadbleComponents. Assuming we want to test Google Drive's Settings page, we firstly identify a click path from GoogleSearchPage Page Object -- load google.com -> click Drive tab -> Settings.
+We may model Page Objects as follows:
+\begin{verbatim}
+class GoogleDrivePageLoadable 
+  def initialize
+    @GPob = GoogleSearchPageLoadable.new
+  end
+  def load
+    @GPob.load
+    self.switchToDrivePage
+  end 
+  def isLoaded
+    # check if page is loaded properly
+  end
+end
+
+class GoogleDriveSettingsLoadable
+  def initialize 
+    @GDob = GoogleDrivePageLoadable.new
+  end
+  def load 
+    @GDob.load
+    self.switchToSettingsPage
+  end 
+  def isLoaded
+    # check if page is loaded properly  
+  end
+end
+\end{verbatim}
+
+Having nested components invoked by load function will result in loading all dependencies for the class. Specifically, \emph{GoogleDriveSettingsLoadable.load} will open google.com page, will switch to Google Drive and open its Settings.
+
+
 \subsection{Bot Style Tests}
+
 \subsection{Observer - for AJAX calls}
 \subsection{Lazy Initialization}
 \subsection{Double Checked Locking}
