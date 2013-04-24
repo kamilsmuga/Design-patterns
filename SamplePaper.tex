@@ -169,8 +169,53 @@ This approach has a number of advantages:
 \end{itemize}
 
 
-
 \subsection{LoadableComponent}
+The LoadableComponent is a base class that make writing Page Objects easier. It provides an interface that ensures page is loaded and provides hooks to make debugging easier. 
+Using previous example let's apply LoadableComponent for GoogleSearchPage Page Object. 
+
+\begin{verbatim}
+class GoogleSearchPage
+  def initialize
+    @driver = Webdriver.new
+    @q = WebElement.new
+    @btn = WebElement.new
+  end
+  def \emph{load}
+    @driver.get("http://google.com")
+  end
+  def \emph{isLoaded}
+    url = @driver.getCurrentUrl
+    assertTrue("Google page not loaded: #{url}", url.contains "google.com")  
+    assertTrue @btn.isDisplayed
+    assertTrue @q.isDisplayed
+  def open(url)
+    @driver.get url
+  end
+  def close
+    @driver.quit
+  end
+  def getTitle
+    @driver.getTitle
+  end
+  def searchFor(searchString)
+    @self.typeSearchTerm searchString
+    @btn.click
+  end
+  def typeSearchTerm(searchTerm)
+    @q.sendKeys searchTerm
+  end
+  def clickOnSearch
+    @btn.click
+  end
+end
+
+\end{verbatim}
+
+Two methods have been added:
+\begin{itemize}
+\item [--] load -- method contains information how to laod the page itself,
+\item [--] isLoaded -- method performs assertions to ensure proper page has been loaded correctly.
+\end{itemize}
 \subsection{Bot Style Tests}
 \subsection{Observer - for AJAX calls}
 \subsection{Lazy Initialization}
