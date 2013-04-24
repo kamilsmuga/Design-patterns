@@ -109,8 +109,8 @@ One of the Model-based testing approaches is a generation of test cases with ora
 
 
 \subsection{Page Object Pattern}
-Page Object pattern is a design pattern used mostly in web application testing. Page Object represents application area that interacts with the test. More specifically, represents a service provided by a particular page. 
-Code example for google.com testing:
+Page Object pattern is a design pattern used mostly in web application testing. Page Object represents application area that interacts with the test. More specifically, represents a service provided by a particular page. A good habit is to try not to expose internals of the page and not to make assertions inside Page Objects -- defer them to actual tests. 
+\ Code example for google.com Page Object representation:
 
 \begin{verbatim}
 class GoogleSearchPage
@@ -129,7 +129,7 @@ class GoogleSearchPage
     @driver.getTitle
   end
   def searchFor(searchString)
-    @q.sendKeys searchString
+    @self.typeSearchTerm searchString
     @btn.click
   end
   def typeSearchTerm(searchTerm)
@@ -143,11 +143,31 @@ end
 
 The example assumes Selenium Webdriver is initialized as \emph{driver}, \emph{q} refers to query field and \emph{btn} refers to search button.
 
+The example of test using Page Object defined above:
+\begin{verbatim}
+class TestGoogleSearchPage< Test::Unit::TestCase
+  def setup
+    @driver = Selenium::WebDriver.for :firefox
+    @wait = Selenium::WebDriver::Wait.new :timeout => 10
+    @GPob = GoogleSearchPage.new
+  end
+  def test_title
+    @GPob.open(http://google.com)
+    assert(@GPob.getTitle, "Google")
+  end
+  def test_search
+    @GPob.open(http://google.com)
+    @GPob.searchFor "to be or not to be?"
+end
+\end{verbatim}
+The example shows that test does not need to know about page details internals. Person who implements the tests needs only to know what services (public interface) page provides.
 This approach has a number of advantages:
 \begin{itemize}
-\item [--] reduces the duplication of code -- 
-\item [--] code maintainability --  
+\item [--] reduces the duplication of code -- implementation details of page functionality are encapsulated in related Page Object --- when somethings changes on the page there is only one place to update
+\item [--] improves test code maintainability -- due to minimized code duplication
+\item [--] makes test more readable -- due to page abstraction as a service, test is written using end-user language and easy to understand
 \end{itemize}
+
 
 
 \subsection{LoadableComponent}
