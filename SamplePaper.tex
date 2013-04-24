@@ -197,10 +197,10 @@ We may model Page Objects as follows:
 \begin{verbatim}
 class GoogleDrivePageLoadable 
   def initialize
-    @GPob = GoogleSearchPageLoadable.new
+    @parent = GoogleSearchPageLoadable.new
   end
   def load
-    @GPob.load
+    @parent.load
     self.switchToDrivePage
   end 
   def isLoaded
@@ -210,10 +210,10 @@ end
 
 class GoogleDriveSettingsLoadable
   def initialize 
-    @GDob = GoogleDrivePageLoadable.new
+    @parent = GoogleDrivePageLoadable.new
   end
   def load 
-    @GDob.load
+    @parent.load
     self.switchToSettingsPage
   end 
   def isLoaded
