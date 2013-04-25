@@ -253,14 +253,31 @@ end
 In the example below, database connection will be only created if test invokes \emph{queryDB} method and no connection is currently available in the pool.
 
 \subsection{Double Checked Locking}
-
-
-
+Test automation framework is a multithreaded envrionment. Executed tests can try to access a particular utility at the same time. A utility represents Singleton that is expensive to create -- as mentioned in Lazy Initialization part. As a result, we would like to design a Singleton with Lazy Initialization. This is possible by using Double Checked Locking.
+Code example in Java. Unfortunately, this is not a perfect solution -- more details on~\cite{ref:4.1}
+\begin{verbatim}
+// Works with acquire/release semantics for volatile
+// Broken under current semantics for volatile
+  class Foo {
+        private volatile Helper helper = null;
+        public Helper getHelper() {
+            if (helper == null) {
+                synchronized(this) {
+                    if (helper == null)
+                        helper = new Helper();
+                }
+            }
+            return helper;
+        }
+    }
+end
+\end{verbatim}
 
 \begin{thebibliography} {9}
 \bibitem{ref:1.1} Eric Evans, {\sl Domain-Driven Design: Tackling Complexity in the Heart of Software}, Addison-Wesley Professional, 2003, ISBN-10: 0-321-12521-5, ISBN-13: 978-0-321-12521-7
 \bibitem{ref:2.1} Pajunen, T.; Takala, T.; Katara, M.; {\sl Model-Based Testing with a General Purpose Keyword-Driven Test Automation Framework}, 2011, Fourth International Conference on Software Testing, Verification and Validation Workshops
 \bibitem{ref:3.1} Selenium wiki page, \url{https://code.google.com/p/selenium/w/list}
+\bibitem{ref:4.1} The "Double-Checked Locking is Broken" Declaration, \url{http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html}
 \end{thebibliography}
 
 
