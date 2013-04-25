@@ -225,7 +225,7 @@ end
 Having nested components invoked by load function will result in loading all dependencies for the class. Specifically, \emph{GoogleDriveSettingsLoadable.load} will open google.com page, will switch to Google Drive and open its Settings.
 
 \subsection{Bot Style Tests}
-An alternative to Page Object design is a Bot Style approach. This basically add an abstraction layer over library -- f.e. if Selenium does not provide methods which kick off actions that one needs, a 'bot' approach suggests to add a new method. Code example:
+An alternative to Page Object design is a Bot Style approach. This basically add an abstraction layer over a library -- f.e. if Selenium does not provide methods which kick off actions that one needs, a 'bot' approach suggests to add a new method. Code example:
 \begin{verbatim}
 class ActionBot
   def type text
@@ -240,6 +240,18 @@ If code duplication exists after using this method, it is possible to layer Page
 \subsection{Observer - for AJAX calls}
 
 \subsection{Lazy Initialization}
+Lazy Initialization is used to reduce expenses of keeping objects in memory and to avoid creating expensive connections if not required. In the test automation context, it is often a case that some tests require database or ssh connections that are expensive to create. While running a test suite that does not include database verification tests, the automation framework should not create unnecessary connections. 
+\begin{verbatim}
+class DBUtil
+  def queryDB sql
+    if !conn_pool.get?
+       conn_pool.add Connection.new
+    conn_pool.query sql
+  end
+end
+\end{verbatim}
+In the example below, database connection will be only created if test invokes \emph{queryDB} method and no connection is currently available in the pool.
+
 \subsection{Double Checked Locking}
 
 
