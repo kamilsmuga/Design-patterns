@@ -53,6 +53,8 @@
 \section{Introduction}
  By definition, software is applied to automate processes that exist in a real world. To build software that solves complex problems we need software development process. Software development process contains software testing phase. When testing phase is applied differs between projects and methodologies. Whether testing will be performed manually or automatically depends on type of testing and number of other business and project specific factors. However, regression and acceptance tests are proven field to apply test automation. Test automation design is the subject of this paper.
 
+\section{Test automation framework design and tools}
+
 \subsection{Domain Driven Design}
 The vision of Domain Driven Design is being widely popularized by Eric Evans. Eric wrote popular book on the subject: \emph{Domain-Driven Design: Tackling Complexity in the Heart of Software}. In a nutshell, DDD refers to:
 \begin{itemize}
@@ -107,6 +109,7 @@ One of the Model-based testing approaches is a generation of test cases with ora
 
 \subsubsection{Make use of the "Repository" pattern to make it easier to create objects}
 
+\section{Design patterns used to web application UI testing}
 
 \subsection{Page Object Pattern}
 Page Object pattern is a design pattern used mostly in web application testing. Page Object represents application area that interacts with the test. More specifically, represents a service provided by a particular page. A good habit is to try not to expose internals of the page and not to make assertions inside Page Objects -- defer them to actual tests. 
@@ -237,7 +240,6 @@ end
 Assuming we want to type into text field on website, default Selenium behavior is to send keys directly to text field. However, we want to clear the field before adding a next text. This will be accomplished using \emph{type} method. \
 If code duplication exists after using this method, it is possible to layer Page Object on top of bots.
 
-\subsection{Observer - for AJAX calls}
 
 \subsection{Lazy Initialization}
 Lazy Initialization is used to reduce expenses of keeping objects in memory and to avoid creating expensive connections if not required. In the test automation context, it is often a case that some tests require database or ssh connections that are expensive to create. While running a test suite that does not include database verification tests, the automation framework should not create unnecessary connections. 
@@ -272,6 +274,8 @@ Code example in Java. Unfortunately, this is not a perfect solution -- more deta
     }
 end
 \end{verbatim}
+
+\subsection{Observer - for AJAX calls}
 
 \begin{thebibliography} {9}
 \bibitem{ref:1.1} Eric Evans, {\sl Domain-Driven Design: Tackling Complexity in the Heart of Software}, Addison-Wesley Professional, 2003, ISBN-10: 0-321-12521-5, ISBN-13: 978-0-321-12521-7
