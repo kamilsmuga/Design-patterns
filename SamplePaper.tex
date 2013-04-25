@@ -234,7 +234,8 @@ class ActionBot
   end
 end
 \end{verbatim} 
-Assuming we want to type into text field on website, default Selenium behavior is to send keys directly to text field. However, we want to clear the field before adding a next text. This will be accomplished using \emph{type} method.
+Assuming we want to type into text field on website, default Selenium behavior is to send keys directly to text field. However, we want to clear the field before adding a next text. This will be accomplished using \emph{type} method. \
+If code duplication exists after using this method, it is possible to layer Page Object on top of bots.
 
 \subsection{Observer - for AJAX calls}
 
